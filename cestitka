@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Muttertag</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+/* POZADINA */
+
+.bg{
+position:fixed;
+inset:0;
+background:linear-gradient(160deg,#f8e8ff,#efd6ff,#e8c7ff,#ddb5ff);
+z-index:-2;
+animation:bgMove 8s ease-in-out infinite alternate;
+}
+
+@keyframes bgMove{
+from{filter:hue-rotate(0deg);}
+to{filter:hue-rotate(15deg);}
+}
+
+body{
+margin:0;
+height:100vh;
+overflow:hidden;
+font-family:'Montserrat',sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+perspective:1000px;
+background:#f5e4ff;
+}
+
+/* SADRŽAJ */
+
+.content{
+position:absolute;
+text-align:center;
+opacity:0;
+transform:scale(.85);
+transition:1.5s;
+z-index:5;
+max-width:90vw;
+padding:20px;
+}
+
+.show{
+opacity:1;
+transform:scale(1);
+}
+
+h1{
+font-size:clamp(34px,8vw,78px);
+color:white;
+font-weight:800;
+letter-spacing:5px;
+text-shadow:
+0 0 15px rgba(255,255,255,0.8),
+0 0 35px rgba(255,255,255,0.5);
+margin:0;
+line-height:1.15;
+}
+
+.sub{
+font-size:clamp(22px,5vw,36px);
+color:white;
+margin-top:28px;
+font-weight:600;
+text-shadow:0 0 18px rgba(255,255,255,0.6);
+}
+
+/* ORHIDEJA ISPOD */
+
+.bigFlower{
+margin-top:40px;
+width:85vw;
+max-width:420px;
+margin-left:auto;
+margin-right:auto;
+filter:drop-shadow(0 0 18px rgba(255,255,255,0.5));
+}
+
+/* KOVERTA */
+
+.envelope{
+position:fixed;
+inset:0;
+background:#f4dfff;
+z-index:10;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+animation:fadeOut 1.8s forwards;
+animation-delay:3s;
+}
+
+.flap{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:50%;
+background:#eac7ff;
+clip-path:polygon(0 0,100% 0,50% 100%);
+transform-origin:top;
+animation:openFlap 1.7s forwards;
+animation-delay:1s;
+z-index:1;
+}
+
+.seal{
+width:130px;
+height:130px;
+z-index:5;
+}
+
+/* ANIMACIJE */
+
+@keyframes openFlap{
+to{ transform:rotateX(180deg); }
+}
+
+@keyframes fadeOut{
+to{
+opacity:0;
+visibility:hidden;
+}
+}
+
+/* ORHIDEJE */
+
+.orchid{
+position:absolute;
+top:-120px;
+z-index:1;
+animation:fall linear forwards;
+pointer-events:none;
+filter:drop-shadow(0 0 8px rgba(255,255,255,0.4));
+}
+
+@keyframes fall{
+to{
+transform:
+translateY(115vh)
+rotate(360deg);
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="content" id="content">
+
+<h1>ALLES GUTE<br>ZUM MUTTERTAG</h1>
+
+<div class="sub">
+ICH LIEBE DICH AM MEISTEN
+</div>
+
+<div class="bigFlower" id="bigFlower"></div>
+
+</div>
+
+<div class="envelope">
+
+<div class="seal" id="seal"></div>
+
+<div class="flap"></div>
+
+</div>
+
+<script>
+
+/* ORHIDEJA CRTANA SVG FUNKCIJAMA */
+
+function createOrchid(color1,color2){
+
+const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+
+svg.setAttribute("viewBox","0 0 200 200");
+svg.setAttribute("width","100%");
+svg.setAttribute("height","100%");
+
+/* GORNJA LATICA */
+
+function petal(d,color){
+
+const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+
+p.setAttribute("d",d);
+p.setAttribute("fill",color);
+
+return p;
+
+}
+
+/* LATICE */
+
+svg.appendChild(
+petal(
+"M100 25 C125 0 165 25 150 65 C130 85 110 78 100 55 C90 78 70 85 50 65 C35 25 75 0 100 25 Z",
+color1
+)
+);
+
+svg.appendChild(
+petal(
+"M45 85 C10 70 5 120 40 130 C65 135 75 110 70 92 Z",
+color2
+)
+);
+
+svg.appendChild(
+petal(
+"M155 85 C190 70 195 120 160 130 C135 135 125 110 130 92 Z",
+color2
+)
+);
+
+svg.appendChild(
+petal(
+"M100 95 C135 95 145 145 100 170 C55 145 65 95 100 95 Z",
+color1
+)
+);
+
+/* CENTAR */
+
+const center=document.createElementNS("http://www.w3.org/2000/svg","circle");
+
+center.setAttribute("cx","100");
+center.setAttribute("cy","102");
+center.setAttribute("r","16");
+center.setAttribute("fill","#fff7cc");
+
+svg.appendChild(center);
+
+/* DETALJI */
+
+const detail=document.createElementNS("http://www.w3.org/2000/svg","circle");
+
+detail.setAttribute("cx","100");
+detail.setAttribute("cy","102");
+detail.setAttribute("r","6");
+detail.setAttribute("fill","#ff77aa");
+
+svg.appendChild(detail);
+
+return svg;
+
+}
+
+/* PECAT */
+
+document.getElementById("seal")
+.appendChild(
+createOrchid("#ffb7f5","#f48cff")
+);
+
+/* VELIKA ORHIDEJA */
+
+document.getElementById("bigFlower")
+.appendChild(
+createOrchid("#ffc9ff","#d68cff")
+);
+
+/* PRIKAZ SADRZAJA */
+
+setTimeout(()=>{
+
+document.getElementById("content")
+.classList.add("show");
+
+startOrchids();
+
+},3200);
+
+/* PADAJUCE ORHIDEJE */
+
+function startOrchids(){
+
+setInterval(()=>{
+
+let orchid=document.createElement("div");
+
+orchid.className="orchid";
+
+/* NASUMICNE LJUBICASTE NIJANSE */
+
+let hue=280+Math.random()*40;
+
+let c1=`hsl(${hue},85%,82%)`;
+let c2=`hsl(${hue+10},80%,70%)`;
+
+orchid.appendChild(
+createOrchid(c1,c2)
+);
+
+let size=55+Math.random()*55;
+
+orchid.style.width=size+"px";
+orchid.style.height=size+"px";
+
+orchid.style.left=Math.random()*100+"vw";
+
+orchid.style.animationDuration=
+(7+Math.random()*4)+"s";
+
+document.body.appendChild(orchid);
+
+setTimeout(()=>orchid.remove(),12000);
+
+},250);
+
+}
+
+</script>
+
+</body>
+</html>
